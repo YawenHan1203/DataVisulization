@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Hmk5 Q2</title>
+		<script src="https://d3js.org/d3.v4.min.js"></script>
+
+	</head>
+	<body>
+	
+	  <h3>Click anywhere to add a point.</h3>
+
+	  
+		<script type="text/javascript">
+
+			//Width and height of svg
+			var w = 600;
+			var h = 400;
+			var padding = 30;
+			
+			// axis min / max
+		    var xmin = -50;
+		    var xmax = 50;
+		    var ymin = -30;
+		    var ymax = 30;
+		  
+		
+			//		Scale functions
+			
+			var xScale = d3.scaleLinear().domain([xmin,xmax]).range([padding,w-padding]);
+			var yScale = d3.scaleLinear().domain([ymin,ymax]).range([h-padding,padding]);
+
+			//    Define X axis and Y axis
+			
+			var xAxis = d3.axisBottom().scale(xScale).ticks(5);
+			var yAxis = d3.axisLeft().scale(yScale).ticks(7);
+
+
+			//    Create SVG element	
+			d3.select("body").append("svg").attr("class","main").attr("width",w).attr("height",h);	
+			var svg_main = d3.select("svg.main");
+			
+
+			d3.select("body").append("svg").attr("class","text").attr("width",2*w).attr("height",h);
+			var svg_text = d3.select("svg.text");	
+			
+			//    Create axes
+			svg_main.append("g").attr("class", "xAxis").attr("transform",`translate(0,${h/2})`).call(xAxis);
+			svg_main.append("g").attr("class", "yAxis").attr("transform",`translate(${w/2},0)`).call(yAxis);
+					
+			//    Create blank text element
+			svg_text.append("text").attr("id","show").attr("x",0).attr("y",20).attr("font-size","16px").attr("font-family","Arial").attr("font-weight","bold");
+				
+			//    Click behavior
+			function addpt() {
+				var coord = d3.mouse(this);
+				var x = coord[0];
+				var y = coord[1];
+				//Add point at click location
+				svg_main.append("circle").attr("cx", x).attr("cy",y).attr("r",5).attr("fill","red");
+				var x_scale = Math.round(xScale.invert(x)*10)/10;
+				var y_scale = Math.round(yScale.invert(y)*10)/10;
+				//Show point scale
+				svg_text.select("#show").text(`New point added at: ${x_scale}, ${y_scale}`);
+		    }
+			svg_main.on("click", addpt);
+			
+			
+
+
+		</script>
+	</body>
+</html>
